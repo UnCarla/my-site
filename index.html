@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Database Query Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+        }
+        .result-card {
+            transition: all 0.3s ease;
+        }
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .slide-in {
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="gradient-bg text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-database text-3xl"></i>
+                    <h1 class="text-3xl font-bold">AI Database Query</h1>
+                </div>
+                <div class="flex space-x-4">
+                    <button class="bg-white text-purple-600 px-4 py-2 rounded-full font-semibold hover:bg-gray-100 transition">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </button>
+                    <button class="bg-white text-purple-600 px-4 py-2 rounded-full font-semibold hover:bg-gray-100 transition">
+                        <i class="fas fa-question-circle mr-2"></i>Help
+                    </button>
+                </div>
+            </div>
+            <p class="mt-4 text-lg opacity-90">Get intelligent answers from your database using AI</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left sidebar - Database connections -->
+            <div class="bg-white rounded-xl shadow-md p-6 h-fit">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">
+                    <i class="fas fa-plug mr-2 text-purple-500"></i>Database Connections
+                </h2>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-database text-blue-500"></i>
+                            <div>
+                                <p class="font-medium">Production DB</p>
+                                <p class="text-sm text-gray-500">MySQL • 45 tables</p>
+                            </div>
+                        </div>
+                        <span class="h-3 w-3 rounded-full bg-green-400"></span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-database text-green-500"></i>
+                            <div>
+                                <p class="font-medium">Analytics DB</p>
+                                <p class="text-sm text-gray-500">PostgreSQL • 12 tables</p>
+                            </div>
+                        </div>
+                        <span class="h-3 w-3 rounded-full bg-green-400"></span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg opacity-70">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-database text-yellow-500"></i>
+                            <div>
+                                <p class="font-medium">Archive DB</p>
+                                <p class="text-sm text-gray-500">MongoDB • 8 collections</p>
+                            </div>
+                        </div>
+                        <span class="h-3 w-3 rounded-full bg-gray-400"></span>
+                    </div>
+                    
+                    <button class="w-full mt-4 bg-purple-100 text-purple-600 py-2 rounded-lg font-medium hover:bg-purple-200 transition flex items-center justify-center space-x-2">
+                        <i class="fas fa-plus"></i>
+                        <span>Add New Connection</span>
+                    </button>
+                </div>
+                
+                <div class="mt-8">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">
+                        <i class="fas fa-history mr-2 text-purple-500"></i>Recent Queries
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="bg-gray-50 p-3 rounded-lg cursor-pointer hover:bg-purple-50 transition">
+                            <p class="text-sm font-medium truncate">Show me sales trends for Q2</p>
+                            <p class="text-xs text-gray-500">2 hours ago</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg cursor-pointer hover:bg-purple-50 transition">
+                            <p class="text-sm font-medium truncate">List inactive users older than 6 months</p>
+                            <p class="text-xs text-gray-500">Yesterday</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg cursor-pointer hover:bg-purple-50 transition">
+                            <p class="text-sm font-medium truncate">Compare regional revenue growth</p>
+                            <p class="text-xs text-gray-500">3 days ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main content area -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">
+                        <i class="fas fa-robot mr-2 text-purple-500"></i>Ask Your Database
+                    </h2>
+                    
+                    <div class="relative">
+                        <textarea id="queryInput" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 h-32" placeholder="Ask anything about your data... (e.g. 'Show me the top 5 customers by revenue last quarter')"></textarea>
+                        <div class="absolute bottom-3 right-3 flex space-x-2">
+                            <button id="clearBtn" class="bg-gray-100 text-gray-600 p-2 rounded-full hover:bg-gray-200 transition">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button id="sendBtn" class="bg-purple-600 text-white p-2 rounded-full hover:bg-purple-700 transition">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <button class="suggested-query bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200 transition">
+                            <i class="fas fa-chart-line mr-1"></i> Sales trends
+                        </button>
+                        <button class="suggested-query bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200 transition">
+                            <i class="fas fa-users mr-1"></i> User activity
+                        </button>
+                        <button class="suggested-query bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200 transition">
+                            <i class="fas fa-boxes mr-1"></i> Inventory levels
+                        </button>
+                        <button class="suggested-query bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200 transition">
+                            <i class="fas fa-money-bill-wave mr-1"></i> Revenue by region
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="resultsContainer" class="space-y-4">
+                    <!-- Results will be added here dynamically -->
+                    
+                    <!-- Example result (will be hidden initially) -->
+                    <div id="exampleResult" class="hidden result-card bg-white rounded-xl shadow-md p-6 slide-in">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-semibold text-lg text-gray-800">
+                                <i class="fas fa-chart-pie mr-2 text-purple-500"></i>Sales Analysis
+                            </h3>
+                            <div class="flex space-x-2">
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-gray-700">Based on your query about "sales trends for Q2", here's the analysis from your database:</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium">Quarterly Sales Growth</span>
+                                <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">+12.5%</span>
+                            </div>
+                            <div class="h-40 bg-white rounded p-2">
+                                <!-- Chart placeholder -->
+                                <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                    <i class="fas fa-chart-bar text-3xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <p class="text-sm text-blue-800">Top Product</p>
+                                <p class="font-semibold">Premium Widget</p>
+                                <p class="text-xs text-blue-600">$42,800 revenue</p>
+                            </div>
+                            <div class="bg-purple-50 p-3 rounded-lg">
+                                <p class="text-sm text-purple-800">Best Region</p>
+                                <p class="font-semibold">Northwest</p>
+                                <p class="text-xs text-purple-600">+18% growth</p>
+                            </div>
+                            <div class="bg-green-50 p-3 rounded-lg">
+                                <p class="text-sm text-green-800">New Customers</p>
+                                <p class="font-semibold">142</p>
+                                <p class="text-xs text-green-600">15% of total</p>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t pt-3">
+                            <p class="text-sm text-gray-500">
+                                <i class="fas fa-info-circle mr-1"></i> Generated from Production DB • 2,450 records analyzed
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="loadingIndicator" class="hidden text-center py-8">
+                    <div class="inline-block p-4 bg-white rounded-full shadow-lg">
+                        <i class="fas fa-circle-notch fa-spin text-purple-500 text-3xl"></i>
+                    </div>
+                    <p class="mt-4 text-gray-600">Analyzing your database and generating insights...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const queryInput = document.getElementById('queryInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const exampleResult = document.getElementById('exampleResult');
+            const suggestedQueries = document.querySelectorAll('.suggested-query');
+            
+            // Clear input
+            clearBtn.addEventListener('click', function() {
+                queryInput.value = '';
+            });
+            
+            // Handle suggested queries
+            suggestedQueries.forEach(button => {
+                button.addEventListener('click', function() {
+                    queryInput.value = this.textContent.trim();
+                    queryInput.focus();
+                });
+            });
+            
+            // Handle query submission
+            sendBtn.addEventListener('click', function() {
+                const query = queryInput.value.trim();
+                if (query) {
+                    processQuery(query);
+                }
+            });
+            
+            // Also allow Enter key to submit (but Shift+Enter for new line)
+            queryInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendBtn.click();
+                }
+            });
+            
+            function processQuery(query) {
+                // Show loading indicator
+                loadingIndicator.classList.remove('hidden');
+                resultsContainer.classList.add('hidden');
+                
+                // Simulate API call with timeout
+                setTimeout(function() {
+                    loadingIndicator.classList.add('hidden');
+                    resultsContainer.classList.remove('hidden');
+                    
+                    // For demo purposes, we'll show the example result
+                    // In a real app, you would generate dynamic content based on the query
+                    exampleResult.classList.remove('hidden');
+                    exampleResult.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Add the query to recent queries (demo)
+                    addToRecentQueries(query);
+                    
+                }, 2000);
+            }
+            
+            function addToRecentQueries(query) {
+                // In a real app, you would save this to local storage or backend
+                const recentQueriesContainer = document.querySelector('.space-y-3');
+                if (recentQueriesContainer) {
+                    const newQuery = document.createElement('div');
+                    newQuery.className = 'bg-gray-50 p-3 rounded-lg cursor-pointer hover:bg-purple-50 transition';
+                    newQuery.innerHTML = `
+                        <p class="text-sm font-medium truncate">${query}</p>
+                        <p class="text-xs text-gray-500">Just now</p>
+                    `;
+                    recentQueriesContainer.insertBefore(newQuery, recentQueriesContainer.firstChild);
+                    
+                    // Limit to 5 recent queries
+                    if (recentQueriesContainer.children.length > 5) {
+                        recentQueriesContainer.removeChild(recentQueriesContainer.lastChild);
+                    }
+                }
+            }
+            
+            // For demo purposes, show the example result after a delay
+            setTimeout(() => {
+                exampleResult.classList.remove('hidden');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
